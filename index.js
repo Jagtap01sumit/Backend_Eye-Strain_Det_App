@@ -41,15 +41,17 @@ app.post("/addData", async (req, res) => {
   try {
     const { username, email, birthdate, phone, age, gender, address } =
       req.body;
-
+    console.log(req.body, "req");
     const isUserExists = await Profile.findOne({
       email: email,
     });
+    console.log(email);
 
     if (isUserExists) {
       console.log("existes");
       return res.status(400).json({
-        error: "User already Available  (todo: create a update info form)",
+        error:
+          "You can edit profile only once!!! (todo: create a update info form)",
       });
     } else {
       const newUser = new Profile({
@@ -63,7 +65,7 @@ app.post("/addData", async (req, res) => {
       });
 
       const savedUser = await newUser.save();
-      console.log("User created successfully:", savedUser.email);
+      console.log("Profile created successfully:", savedUser.email);
       res.status(201).json(savedUser);
     }
   } catch (err) {
@@ -75,13 +77,14 @@ app.post("/addData", async (req, res) => {
 app.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
-
+    console.log(req.body);
     const isUserExists = await User.findOne({ email: email });
 
     if (isUserExists) {
       return res.status(400).json({ error: "user already exists" });
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
+
       const newUser = new User({
         email,
         password: hashedPassword,
@@ -91,7 +94,7 @@ app.post("/register", async (req, res) => {
       res.status(201).json(savedUser);
     }
   } catch (err) {
-    res.status(500).json({ err: "error" });
+    res.status(500).json(err);
   }
 });
 

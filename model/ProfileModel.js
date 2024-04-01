@@ -21,10 +21,13 @@ const profileSchema = new mongoose.Schema({
     type: "number",
     required: true,
   },
+
   gender: {
     type: "string",
     required: true,
+    enum: ["male", "female"],
   },
+
   address: {
     type: "string",
     default: "Address",
